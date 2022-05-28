@@ -80,7 +80,67 @@ async function run() {
       res.json(result);
     });
 
-    //delete api for product
+    // admin manage 
+        // get all orders
+        app.get('/all-orders', async (req, res) => {
+          const result = await ordersCollection.find().toArray()
+          res.json(result)
+      })
+      // update orders status
+      app.put('/updateStatus/:id', async (req, res) => {
+          const id = req.params.id
+          const result = await ordersCollection.updateOne({
+              _id: ObjectId(id)
+          }, {
+              $set: {
+                  status: 'Approved',
+              }
+          })
+          res.json(result);
+      })
+      app.put('/updateStatus1/:id', async (req, res) => {
+          const id = req.params.id
+          const result = await ordersCollection.updateOne({
+              _id: ObjectId(id)
+          }, {
+              $set: {
+                  status: 'on the way',
+              }
+          })
+          res.json(result);
+      })
+
+      //add a new product to db
+      app.post('/products', async (req, res) => {
+          const result = await productsCollection.insertOne(req.body)
+          res.json(result)
+      })
+
+      // delete product from db
+      app.delete('/delete/:id', async (req, res) => {
+          const result = await productsCollection.deleteOne({
+              _id: ObjectId(req.params.id)
+          })
+          res.json(result)
+      })
+
+      // make admin role 
+      app.post('/users/admin', async (req, res) => {
+        const user = req.body
+        const result = await userCollection.insertOne(user)
+        res.json(result)
+    })
+    //get admin user 
+    app.get('/users/:email', async (req, res) => {
+        const email = req.params.email
+        const query = { email: email }
+        const user = await userCollection.findOne(query)
+        let isAdmin = false
+        if (user?.role === 'admin') {
+            isAdmin = true;
+        }
+        res.json({ admin: isAdmin })
+    })
 
     console.log("Db connected");
   } finally {
