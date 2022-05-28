@@ -33,13 +33,22 @@ async function run() {
     
    
       
-      // create api for product 
+      // get api for product 
       app.get('/products', async (req, res) => {
         const query = {};
         const cursor = productsCollection.find(query);
         const products = await cursor.toArray();
         res.send(products);
     });
+    // get by id Api
+    app.get('/product/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {
+          _id: ObjectId(id)
+      };
+      const product = await productsCollection.findOne(query);
+      res.send(product);
+  });
 
       // update api for product 
 
