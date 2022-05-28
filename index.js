@@ -25,13 +25,21 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
   try {
     await client.connect();
-    const productCollection = client.db("productList").collection("product");
+    const productsCollection = client.db('Tools').collection('products');
+    const ordersCollection = client.db('Tools').collection('orders');
+    const ratingCollection = client.db('Tools').collection('reviews')
+    const userCollection = client.db('Tools').collection('users')
 
-      // get api for product
+    
    
       
       // create api for product 
-
+      app.get('/products', async (req, res) => {
+        const query = {};
+        const cursor = productsCollection.find(query);
+        const products = await cursor.toArray();
+        res.send(products);
+    });
 
       // update api for product 
 
