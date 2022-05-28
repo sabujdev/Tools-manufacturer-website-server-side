@@ -142,6 +142,46 @@ async function run() {
         res.json({ admin: isAdmin })
     })
 
+     // payment 
+
+     app.get('/payment/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {
+          _id: ObjectId(id)
+      };
+      const product = await ordersCollection.findOne(query);
+      res.json(product);
+  });
+
+  // update order after payment successfull
+  app.put('/payment/:id', async (req, res) => {
+      const id = req.params.id;
+      const payment = req.body;
+      const filter = {
+          _id: ObjectId(id)
+      }
+      const updateDoc = {
+          $set: {
+              payment: payment
+          }
+      }
+      const result = await ordersCollection.updateOne(filter, updateDoc)
+      res.json(result)
+  })
+
+  // payment method setup
+  app.post('/create-payment-intent', async (req, res) => {
+      const paymentInfo = req.body
+      const amount = paymentInfo.price * 100
+      const paymentIntent = await stripe.paymentIntents.create({
+          currency: 'usd',
+          amount: amount,
+          payment_method_types: ['card']
+      })
+      res.json({
+          clientSecret: paymentIntent.client_secret
+      })
+  })
     console.log("Db connected");
   } finally {
     // await client.close();
