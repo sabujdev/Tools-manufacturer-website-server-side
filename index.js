@@ -57,6 +57,29 @@ async function run() {
       res.json(result);
     });
 
+    // Order Api
+    app.post("/orders", async (req, res) => {
+      const product = await ordersCollection.insertOne(req.body);
+      res.send(product);
+    });
+
+    // get single email ordered product
+    app.get("/orders", async (req, res) => {
+      const email = req.query.email;
+      const query = {
+        email: email,
+      };
+      const result = await ordersCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.delete("/delete-order/:id", async (req, res) => {
+      const result = await ordersCollection.deleteOne({
+        _id: ObjectId(req.params.id),
+      });
+      res.json(result);
+    });
+
     //delete api for product
 
     console.log("Db connected");
