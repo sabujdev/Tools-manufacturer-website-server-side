@@ -16,7 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.dq5st.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.d54lo.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -27,10 +27,10 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         await client.connect();
-        const productsCollection = client.db('powerTools').collection('products');
-        const ordersCollection = client.db('powerTools').collection('orders');
-        const ratingCollection = client.db('powerTools').collection('reviews')
-        const userCollection = client.db('powerTools').collection('users')
+        const productsCollection = client.db('Tools').collection('products');
+        const ordersCollection = client.db('Tools').collection('orders');
+        const ratingCollection = client.db('Tools').collection('reviews')
+        const userCollection = client.db('Tools').collection('users')
 
         app.get('/products', async (req, res) => {
             const query = {};
