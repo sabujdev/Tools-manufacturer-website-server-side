@@ -41,6 +41,20 @@ async function run() {
       res.send(product);
     });
 
+      //add a new product to db
+      app.post('/products', async (req, res) => {
+        const result = await productsCollection.insertOne(req.body)
+        res.json(result)
+    })
+
+    // delete product from db
+    app.delete('/delete/:id', async (req, res) => {
+        const result = await productsCollection.deleteOne({
+            _id: ObjectId(req.params.id)
+        })
+        res.json(result)
+    })
+
     // update api for product
     app.put("/product/:id", async (req, res) => {
       const id = req.params.id;
@@ -110,19 +124,7 @@ async function run() {
           res.json(result);
       })
 
-      //add a new product to db
-      app.post('/products', async (req, res) => {
-          const result = await productsCollection.insertOne(req.body)
-          res.json(result)
-      })
-
-      // delete product from db
-      app.delete('/delete/:id', async (req, res) => {
-          const result = await productsCollection.deleteOne({
-              _id: ObjectId(req.params.id)
-          })
-          res.json(result)
-      })
+    
 
       // make admin role 
       app.post('/users/admin', async (req, res) => {
@@ -168,6 +170,16 @@ async function run() {
       const result = await ordersCollection.updateOne(filter, updateDoc)
       res.json(result)
   })
+
+  // add rating to db
+  app.post('/rating', async (req, res) => {
+    const result = await ratingCollection.insertOne(req.body)
+    res.json(result)
+})
+app.get('/rating', async (req, res) => {
+    const result = await ratingCollection.find().toArray()
+    res.json(result)
+})
 
   // payment method setup
   app.post('/create-payment-intent', async (req, res) => {
